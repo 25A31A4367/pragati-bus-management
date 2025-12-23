@@ -1,0 +1,98 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+struct Bus {
+    int busNumber;
+    char busName[50];
+    int totalSeats;
+    int bookedSeats;
+};
+void addBus(struct Bus* bus) {
+    printf("Enter Bus Number: ");
+    scanf("%d", &bus->busNumber);
+    getchar(); // To clear newline character
+    printf("Enter Bus Name: ");
+    fgets(bus->busName, 50, stdin);
+    bus->busName[strcspn(bus->busName, "\n")] = '\0'; // Remove newline from input
+    printf("Enter Total Seats: ");
+    scanf("%d", &bus->totalSeats);
+    bus->bookedSeats = 0;
+    printf("Bus added successfully!\n\n");
+}
+void displayBus(struct Bus bus) {
+    printf("Bus Number: %d\n", bus.busNumber);
+    printf("Bus Name: %s\n", bus.busName);
+    printf("Total Seats: %d\n", bus.totalSeats);
+    printf("Booked Seats: %d\n", bus.bookedSeats);
+    printf("Available Seats: %d\n", bus.totalSeats - bus.bookedSeats);
+    printf("------------------------------------\n");
+}
+void bookSeats(struct Bus* bus, int seats) {
+    if (seats <= 0) {
+        printf("Invalid number of seats!\n");
+    } else if (seats + bus->bookedSeats > bus->totalSeats) {
+        printf("Not enough available seats!\n");
+    } else {
+        bus->bookedSeats += seats;
+        printf("%d seats successfully booked!\n", seats);
+    }
+    printf("------------------------------------\n");
+}
+void cancelSeats(struct Bus* bus, int seats) {
+    if (seats <= 0) {
+        printf("Invalid number of seats!\n");
+    } else if (seats > bus->bookedSeats) {
+        printf("You cannot cancel more seats than booked!\n");
+    } else {
+        bus->bookedSeats -= seats;
+        printf("%d seats successfully canceled!\n", seats);
+    }
+    printf("------------------------------------\n");
+}
+
+int main() {
+    int choice;
+    struct Bus bus;
+    
+    while (1) {
+        printf("Pragati Bus Management System\n");
+        printf("1. Add Bus\n");
+        printf("2. Display Bus Details\n");
+        printf("3. Book Seats\n");
+        printf("4. Cancel Seats\n");
+        printf("5. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+        printf("\n");
+
+        switch (choice) {
+            case 1:
+                addBus(&bus);
+                break;
+            case 2:
+                displayBus(bus);
+                break;
+            case 3: {
+                int seats;
+                printf("Enter the number of seats to book: ");
+                scanf("%d", &seats);
+                bookSeats(&bus, seats);
+                break;
+            }
+            case 4: {
+                int seats;
+                printf("Enter the number of seats to cancel: ");
+                scanf("%d", &seats);
+                cancelSeats(&bus, seats);
+                break;
+            }
+            case 5:
+                printf("Exiting Pragati Bus Management System.\n");
+                exit(0);
+            default:
+                printf("Invalid choice. Please try again.\n");
+        }
+    }
+
+    return 0;
+}
